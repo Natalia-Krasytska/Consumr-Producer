@@ -3,8 +3,8 @@ package ait.mediation;
 
 import java.util.LinkedList;
 
-public class BlkQueueImpl<X> implements BlkQueue<X> {
-    private final LinkedList<X> queue = new LinkedList<>();
+public class BlkQueueImpl<T> implements BlkQueue<T> {
+    private final LinkedList<T> queue = new LinkedList<>();
     private final int maxSize;
 
     public BlkQueueImpl(int maxSize) {
@@ -12,7 +12,7 @@ public class BlkQueueImpl<X> implements BlkQueue<X> {
     }
 
     @Override
-    public synchronized void push(X message) {
+    public synchronized void push(T message) {
         while (queue.size() >= maxSize) {
             try {
                 wait();
@@ -25,7 +25,7 @@ public class BlkQueueImpl<X> implements BlkQueue<X> {
     }
 
     @Override
-    public synchronized X pop() {
+    public synchronized T pop() {
         while (queue.isEmpty()) {
             try {
                 wait();
@@ -33,7 +33,7 @@ public class BlkQueueImpl<X> implements BlkQueue<X> {
                 Thread.currentThread().interrupt();
             }
         }
-        X message = queue.removeFirst();
+        T message = queue.removeFirst();
         notifyAll();
         return message;
     }
